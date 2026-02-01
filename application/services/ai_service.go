@@ -287,8 +287,8 @@ func (s *AIService) TestConnection(req *TestConnectionRequest) error {
 		s.log.Infow("Using Gemini client", "baseURL", req.BaseURL)
 		endpoint = "/v1beta/models/{model}:generateContent"
 		client = ai.NewGeminiClient(req.BaseURL, req.APIKey, model, endpoint)
-	case "openai", "chatfire":
-		// OpenAI 格式（包括 chatfire 等）
+	case "openai", "chatfire", "openrouter":
+		// OpenAI 格式（包括 chatfire、openrouter 等）
 		s.log.Infow("Using OpenAI-compatible client", "baseURL", req.BaseURL, "provider", req.Provider)
 		endpoint = req.Endpoint
 		if endpoint == "" {

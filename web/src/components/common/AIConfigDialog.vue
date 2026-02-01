@@ -322,6 +322,17 @@ const providerConfigs: Record<AIServiceType, ProviderConfig[]> = {
       models: ["gpt-5.2", "gemini-3-flash-preview"],
     },
     {
+      id: "openrouter",
+      name: "OpenRouter",
+      models: [
+        "x-ai/grok-3-beta",
+        "x-ai/grok-3-mini-beta",
+        "anthropic/claude-3.5-sonnet",
+        "google/gemini-2.5-pro",
+        "deepseek/deepseek-chat",
+      ],
+    },
+    {
       id: "chatfire",
       name: "Chatfire",
       models: [
@@ -666,6 +677,8 @@ const handleProviderChange = () => {
     form.base_url = "https://ark.cn-beijing.volces.com/api/v3";
   } else if (form.provider === "openai") {
     form.base_url = "https://api.openai.com/v1";
+  } else if (form.provider === "openrouter") {
+    form.base_url = "https://openrouter.ai/api/v1";
   } else {
     // chatfire 和其他厂商
     form.base_url = "https://api.chatfire.site/v1";
