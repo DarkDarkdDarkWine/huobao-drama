@@ -71,15 +71,16 @@ func (s *AIService) CreateConfig(req *CreateAIConfigRequest) (*models.AIServiceC
 			} else if req.ServiceType == "image" {
 				endpoint = "/v1beta/models/{model}:generateContent"
 			}
-		case "openai":
+		case "openrouter", "siliconflow":
+			// OpenRouter 和硅基流动使用 OpenAI 兼容格式
 			if req.ServiceType == "text" {
 				endpoint = "/chat/completions"
 			} else if req.ServiceType == "image" {
 				endpoint = "/images/generations"
 			} else if req.ServiceType == "video" {
-				endpoint = "/videos"
+				endpoint = "/video/generations"
 				if queryEndpoint == "" {
-					queryEndpoint = "/videos/{taskId}"
+					queryEndpoint = "/video/task/{taskId}"
 				}
 			}
 		case "chatfire":
@@ -373,6 +374,8 @@ func (s *AIService) GetAIClient(serviceType string) (ai.AIClient, error) {
 		switch config.Provider {
 		case "gemini", "google":
 			endpoint = "/v1beta/models/{model}:generateContent"
+		case "openrouter", "siliconflow":
+			endpoint = "/chat/completions"
 		default:
 			endpoint = "/chat/completions"
 		}
@@ -383,7 +386,7 @@ func (s *AIService) GetAIClient(serviceType string) (ai.AIClient, error) {
 	case "gemini", "google":
 		return ai.NewGeminiClient(config.BaseURL, config.APIKey, model, endpoint), nil
 	default:
-		// openai, chatfire 等其他厂商都使用 OpenAI 格式
+		// openrouter, siliconflow, chatfire 等其他厂商都使用 OpenAI 格式
 		return ai.NewOpenAIClient(config.BaseURL, config.APIKey, model, endpoint), nil
 	}
 }
@@ -401,6 +404,8 @@ func (s *AIService) GetAIClientForModel(serviceType string, modelName string) (a
 		switch config.Provider {
 		case "gemini", "google":
 			endpoint = "/v1beta/models/{model}:generateContent"
+		case "openrouter", "siliconflow":
+			endpoint = "/chat/completions"
 		default:
 			endpoint = "/chat/completions"
 		}
@@ -411,7 +416,7 @@ func (s *AIService) GetAIClientForModel(serviceType string, modelName string) (a
 	case "gemini", "google":
 		return ai.NewGeminiClient(config.BaseURL, config.APIKey, modelName, endpoint), nil
 	default:
-		// openai, chatfire 等其他厂商都使用 OpenAI 格式
+		// openrouter, siliconflow, chatfire 等其他厂商都使用 OpenAI 格式
 		return ai.NewOpenAIClient(config.BaseURL, config.APIKey, modelName, endpoint), nil
 	}
 }

@@ -227,9 +227,28 @@ interface ProviderConfig {
 const providerConfigs: Record<AIServiceType, ProviderConfig[]> = {
   text: [
     {
-      id: "openai",
-      name: "OpenAI",
-      models: ["gpt-5.2", "gemini-3-flash-preview"],
+      id: "volcengine",
+      name: "火山引擎",
+      models: [
+        "doubao-seed-1-8-251228",
+        "doubao-pro-32k-240828",
+        "doubao-pro-128k-240828",
+      ],
+    },
+    {
+      id: "openrouter",
+      name: "OpenRouter",
+      models: [
+        "openrouter/auto",
+        "anthropic/claude-sonnet-4-20250514",
+        "anthropic/claude-opus-4-20250514",
+        "deepseek/deepseek-chat",
+        "meta-llama/llama-3.1-405b-instruct",
+        "meta-llama/llama-3.1-70b-instruct",
+        "google/gemini-pro-1.5",
+        "qwen/qwen-2.5-72b-instruct",
+        "mistralai/mistral-7b-instruct",
+      ],
     },
     {
       id: "chatfire",
@@ -245,12 +264,37 @@ const providerConfigs: Record<AIServiceType, ProviderConfig[]> = {
       name: "Google Gemini",
       models: ["gemini-2.5-pro", "gemini-3-flash-preview"],
     },
+    {
+      id: "siliconflow",
+      name: "硅基流动",
+      models: [
+        "Pro/deepseek-ai/DeepSeek-V3",
+        "Pro/deepseek-ai/DeepSeek-V2.5",
+        "Pro/Qwen/Qwen2.5-72B-Instruct",
+        "Pro/Qwen/Qwen2.5-32B-Instruct",
+        "Pro/Meta-Llama/Llama-3.1-70B-Instruct",
+        "Pro/Meta-Llama/Llama-3.1-8B-Instruct",
+        "Pro/01-ai/Yi-1.5-34B-Instruct",
+        "Pro/01-ai/Yi-1.5-9B-Instruct",
+        "Pro/THUDM/GLM-4-9B",
+        "Pro/baichuan-inc/Baichuan2-Turbo",
+      ],
+    },
   ],
   image: [
     {
       id: "volcengine",
       name: "火山引擎",
       models: ["doubao-seedream-4-5-251128", "doubao-seedream-4-0-250828"],
+    },
+    {
+      id: "openrouter",
+      name: "OpenRouter",
+      models: [
+        "stability/stable-diffusion-xl",
+        "black-forest-labs/flux-schnell",
+        "black-forest-labs/flux-dev",
+      ],
     },
     {
       id: "chatfire",
@@ -262,7 +306,16 @@ const providerConfigs: Record<AIServiceType, ProviderConfig[]> = {
       name: "Google Gemini",
       models: ["gemini-3-pro-image-preview"],
     },
-    { id: "openai", name: "OpenAI", models: ["dall-e-3", "dall-e-2"] },
+    {
+      id: "siliconflow",
+      name: "硅基流动",
+      models: [
+        "Pro/Stable-Diffusion-XL",
+        "Pro/FLUX.1-schnell",
+        "Pro/FLUX.1-dev",
+        "Pro/Jugernaut/Nemo-ink",
+      ],
+    },
   ],
   video: [
     {
@@ -274,6 +327,16 @@ const providerConfigs: Record<AIServiceType, ProviderConfig[]> = {
         "doubao-seedance-1-0-lite-t2v-250428",
         "doubao-seedance-1-0-pro-250528",
         "doubao-seedance-1-0-pro-fast-251015",
+      ],
+    },
+    {
+      id: "openrouter",
+      name: "OpenRouter",
+      models: [
+        "luma/axon",
+        "minimax/hailuo-2.0",
+        "tencent/hunyuan-video",
+        "bytedance/s2-200h",
       ],
     },
     {
@@ -289,8 +352,19 @@ const providerConfigs: Record<AIServiceType, ProviderConfig[]> = {
         "sora-2-pro",
       ],
     },
-    { id: "openai", name: "OpenAI", models: ["sora-2", "sora-2-pro"] },
-    //    { id: 'minimax', name: 'MiniMax', models: ['MiniMax-Hailuo-2.3', 'MiniMax-Hailuo-2.3-Fast', 'MiniMax-Hailuo-02'] }
+    {
+      id: "gemini",
+      name: "Google Gemini",
+      models: ["gemini-2.0-pro-video"],
+    },
+    {
+      id: "siliconflow",
+      name: "硅基流动",
+      models: [
+        "Pro/AI-MIXTT/Seaweed-Text2Video",
+        "Pro/AI-MIXTT/Seaweed-Image2Video",
+      ],
+    },
   ],
 };
 
@@ -341,12 +415,16 @@ const fullEndpointExample = computed(() => {
   if (serviceType === "text") {
     if (provider === "gemini" || provider === "google") {
       endpoint = "/v1beta/models/{model}:generateContent";
+    } else if (provider === "openrouter" || provider === "siliconflow") {
+      endpoint = "/chat/completions";
     } else {
       endpoint = "/chat/completions";
     }
   } else if (serviceType === "image") {
     if (provider === "gemini" || provider === "google") {
       endpoint = "/v1beta/models/{model}:generateContent";
+    } else if (provider === "openrouter" || provider === "siliconflow") {
+      endpoint = "/images/generations";
     } else {
       endpoint = "/images/generations";
     }
@@ -359,8 +437,8 @@ const fullEndpointExample = computed(() => {
       provider === "volces"
     ) {
       endpoint = "/contents/generations/tasks";
-    } else if (provider === "openai") {
-      endpoint = "/videos";
+    } else if (provider === "openrouter" || provider === "siliconflow") {
+      endpoint = "/video/generations";
     } else {
       endpoint = "/video/generations";
     }
@@ -413,7 +491,8 @@ const generateConfigName = (
 ): string => {
   const providerNames: Record<string, string> = {
     chatfire: "ChatFire",
-    openai: "OpenAI",
+    openrouter: "OpenRouter",
+    siliconflow: "硅基流动",
     gemini: "Gemini",
     google: "Google",
   };
@@ -580,8 +659,12 @@ const handleProviderChange = () => {
   // 根据厂商自动设置默认 base_url
   if (form.provider === "gemini" || form.provider === "google") {
     form.base_url = "https://api.chatfire.site";
+  } else if (form.provider === "openrouter") {
+    form.base_url = "https://openrouter.ai/api/v1";
+  } else if (form.provider === "siliconflow") {
+    form.base_url = "https://api.siliconflow.cn/v1";
   } else {
-    // openai, chatfire 等其他厂商
+    // chatfire 等其他厂商
     form.base_url = "https://api.chatfire.site/v1";
   }
 
