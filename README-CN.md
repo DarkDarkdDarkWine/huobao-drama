@@ -163,10 +163,42 @@ storage:
   base_url: "http://localhost:5678/static"
 
 ai:
-  default_text_provider: "openai"
-  default_image_provider: "openai"
-  default_video_provider: "doubao"
+  default_text_provider: "openrouter"
+  default_image_provider: "volcengine"
+  default_video_provider: "volces"
 ```
+
+### 🤖 AI 服务提供商
+
+平台支持多个 AI 服务提供商。API Key 在 Web 界面中配置（**设置 → AI 配置**）。
+
+#### 支持的提供商
+
+| 提供商 | 文本生成 | 图像生成 | 视频生成 | 默认 API 地址 |
+|--------|---------|---------|---------|--------------|
+| **火山引擎 (Volcengine)** | ✅ | ✅ | ✅ | `https://ark.cn-beijing.volces.com/api/v3` |
+| **OpenRouter** | ✅ | ✅ | ✅ | `https://openrouter.ai/api/v1` |
+| **Chatfire** | ✅ | ✅ | ✅ | `https://api.chatfire.site/v1` |
+| **Google Gemini** | ✅ | ✅ | ✅ | `https://api.chatfire.site` |
+| **硅基流动 (SiliconFlow)** | ✅ | ✅ | ✅ | `https://api.siliconflow.cn/v1` |
+
+#### 默认模型
+
+| 提供商 | 文本模型 | 图像模型 | 视频模型 |
+|--------|---------|---------|---------|
+| **火山引擎** | doubao-seed-1-8-251228 | doubao-seedream-4-5-251128 | doubao-seedance-1-5-pro-251215 |
+| **OpenRouter** | claude-sonnet-4, deepseek-chat, llama-3.1-405b | stable-diffusion-xl, flux-schnell | luma/axon, minimax-hailuo-2.0 |
+| **Chatfire** | claude-sonnet-4-5, gemini-3-flash | doubao-seedream-4-5 | doubao-seedance, sora-2 |
+| **Google Gemini** | gemini-2.5-pro | gemini-3-pro-image | gemini-2.0-pro-video |
+| **硅基流动** | DeepSeek-V3, Qwen-2.5-72B | FLUX.1, Stable-Diffusion-XL | Seaweed-Text2Video |
+
+#### 配置指南
+
+1. 进入 **设置 → AI 配置**
+2. 选择服务类型（文本/图像/视频）
+3. 点击 **添加配置** 添加新的提供商
+4. 输入 API Key 并选择模型
+5. 测试连接并保存
 
 **重要配置项：**
 

@@ -163,10 +163,42 @@ storage:
   base_url: "http://localhost:5678/static"
 
 ai:
-  default_text_provider: "openai"
-  default_image_provider: "openai"
-  default_video_provider: "doubao"
+  default_text_provider: "openrouter"
+  default_image_provider: "volcengine"
+  default_video_provider: "volces"
 ```
+
+### 🤖 AI Service Providers
+
+The platform supports multiple AI service providers. Configure API keys in the Web UI (**Settings → AI Configuration**).
+
+#### Supported Providers
+
+| Provider | Text | Image | Video | Default API |
+|----------|------|-------|-------|-------------|
+| **火山引擎 (Volcengine)** | ✅ | ✅ | ✅ | `https://ark.cn-beijing.volces.com/api/v3` |
+| **OpenRouter** | ✅ | ✅ | ✅ | `https://openrouter.ai/api/v1` |
+| **Chatfire** | ✅ | ✅ | ✅ | `https://api.chatfire.site/v1` |
+| **Google Gemini** | ✅ | ✅ | ✅ | `https://api.chatfire.site` |
+| **硅基流动 (SiliconFlow)** | ✅ | ✅ | ✅ | `https://api.siliconflow.cn/v1` |
+
+#### Default Models
+
+| Provider | Text Models | Image Models | Video Models |
+|----------|-------------|--------------|--------------|
+| **Volcengine** | doubao-seed-1-8-251228 | doubao-seedream-4-5-251128 | doubao-seedance-1-5-pro-251215 |
+| **OpenRouter** | claude-sonnet-4, deepseek-chat, llama-3.1-405b | stable-diffusion-xl, flux-schnell | luma/axon, minimax-hailuo-2.0 |
+| **Chatfire** | claude-sonnet-4-5, gemini-3-flash | doubao-seedream-4-5 | doubao-seedance, sora-2 |
+| **Google Gemini** | gemini-2.5-pro | gemini-3-pro-image | gemini-2.0-pro-video |
+| **SiliconFlow** | DeepSeek-V3, Qwen-2.5-72B | FLUX.1, Stable-Diffusion-XL | Seaweed-Text2Video |
+
+#### Configuration Guide
+
+1. Navigate to **Settings → AI Configuration**
+2. Select service type (Text/Image/Video)
+3. Click **Add Config** to add a new provider
+4. Enter your API key and select models
+5. Test connection and save
 
 **Key Configuration Items:**
 
